@@ -29,8 +29,53 @@ clean-targets:         # directories to be removed by `dbt clean`
 # In this example config, we tell dbt to build all models in the example/
 # directory as views. These settings can be overridden in the individual model
 # files using the `{{ config(...) }}` macro.
+#models:
+#  lessons:
+    # Config indicated by + and applies to all files under models/example/
+#    example:
+#      +materialized: view
+#models:
+#  lessons:
+#    +materialized: table
+#    +persist_docs:
+#      relation: true     # Adds comment to the table/view
+#      columns: true      # Adds comments to each column
+
 models:
   lessons:
-    # Config indicated by + and applies to all files under models/example/
-    example:
+    staging:   #folder name under models
+      +schema: staging   #profiles.yml dataset_"schema"
+      +materialized: table
+      +persist_docs:
+        relation: true     # Adds comment to the table/view
+        columns: true      # Adds comments to each column
+    intermediate:   #folder name under models
+      +schema: intermediate   #profiles.yml dataset_"schema"
+      +materialized: table
+      +persist_docs:
+        relation: true     # Adds comment to the table/view
+        columns: true      # Adds comments to each column
+    marts:   #folder name under models
+      +schema: marts   #profiles.yml dataset_"schema"
+      +materialized: table
+      +persist_docs:
+        relation: true     # Adds comment to the table/view
+        columns: true      # Adds comments to each column
+    example:   #folder name under models
+      +schema: example   #profiles.yml dataset_"schema"
       +materialized: view
+      +persist_docs:
+        relation: true     # Adds comment to the table/view
+        columns: true      # Adds comments to each column
+      # Table deletes 168 hours (7 days) after creation
+      +hours_to_expiration: 168
+
+tests:
+  lessons:
+    staging:
+      +severity: warn # All tests in our lesson project default to warn
+    intermediate:
+      +severity: warn
+    marts:
+      +severity: error
+
